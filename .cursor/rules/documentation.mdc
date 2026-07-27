@@ -1,0 +1,39 @@
+---
+description: Prefer sparse inline docs; durable knowledge belongs in ./context/
+alwaysApply: true
+---
+
+# Documentation
+
+Keep code comments and JSDoc minimal. Prefer readable names and structure over narration.
+
+## Where docs live
+
+- **Key project knowledge** (architecture, build, product decisions, invariants) goes in `./context/` files.
+- New `./context/` docs must **earn their place**: only add or expand when the knowledge is durable, non-obvious, and useful across sessions—not a dump of the last change.
+- Prefer updating an existing context file over creating a new one when the topic already has a home.
+
+## Inline docs
+
+```typescript
+// ❌ BAD — JSDoc that restates the signature
+/** Adds a and b. @param a First number @param b Second number @returns Sum */
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+// ✅ GOOD — no comment; the code is enough
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+// ✅ GOOD — rare inline note for a non-obvious constraint
+// Real returns are annualized; monthly inputs must be converted before use.
+function applyRealReturn(balance: number, annualRate: number): number {
+  // ...
+}
+```
+
+- Do not add JSDoc, file headers, or comment blocks by default.
+- Comment only when intent is easy to miss (workaround, invariant, subtle math).
+- Do not duplicate `./context/` content into source files.

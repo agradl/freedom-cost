@@ -1,0 +1,30 @@
+---
+description: Prefer fewer integration tests; unit tests only for pure, mock-free logic
+alwaysApply: true
+---
+
+# Testing
+
+Prefer a small set of meaningful **integration** tests over a large suite of unit tests.
+
+## Prefer integration tests
+
+- Cover real flows end-to-end (or nearly so): engine + wiring, UI behavior with the real stack, persist round-trips.
+- Favor fewer, broader tests that would catch regressions a user would notice.
+- Avoid one test file per function or exhaustive combinatorial unit coverage.
+
+## Unit tests: pure only
+
+Unit tests are reserved for **pure** logic that needs no mocks:
+
+```typescript
+// ✅ GOOD — pure function, real inputs/outputs, no mocks
+expect(yearsToFreedom({ assets: 500_000, spend: 40_000, realReturn: 0.04 })).toBeCloseTo(18.2);
+
+// ❌ BAD — unit test held up by mocks
+const storage = { getItem: vi.fn(), setItem: vi.fn() };
+vi.mock('./persist', () => ({ loadBaseline: () => storage.getItem('x') }));
+```
+
+- If the code under test needs mocks, stubs, or heavy fakes, write an integration test (or redesign for testability) instead of a mocked unit test.
+- Do not mock collaborators to force a unit test; exercise the real boundary.
