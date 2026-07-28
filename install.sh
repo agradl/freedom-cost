@@ -17,7 +17,7 @@ if [ -z "${NPM_PATH}" ]; then
   exit 1
 fi
 
-EXEC_START="${NPM_PATH} run dev"
+EXEC_START="${NPM_PATH} run dev --port 8081"
 
 echo "==> Application directory: ${APP_DIR}"
 echo "==> Using npm executable:  ${NPM_PATH}"
