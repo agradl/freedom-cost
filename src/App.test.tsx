@@ -116,6 +116,43 @@ describe('Timeline Chart & App Integration', () => {
     expect(localStorage.getItem('freedom_cost_baseline')).toBeNull()
   })
 
+  test('optional spending breakdown validates sum and shows pie', () => {
+    localStorage.clear()
+    render(<App />)
+
+    fireEvent.click(screen.getByTestId('toggle-baseline-form-btn'))
+    expect(screen.getByTestId('spending-breakdown')).toBeInTheDocument()
+    expect(screen.queryByTestId('spending-breakdown-body')).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByTestId('spending-input'), {
+      target: { value: '60000' },
+    })
+
+    fireEvent.click(screen.getByTestId('toggle-spending-breakdown-btn'))
+    expect(screen.getByTestId('spending-breakdown-body')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByTestId('add-spending-category-btn'))
+    const monthlyInputs = screen.getAllByTestId('spending-category-monthly')
+    const labelInputs = screen.getAllByTestId('spending-category-label')
+
+    fireEvent.change(labelInputs[0], { target: { value: 'Housing' } })
+    fireEvent.change(monthlyInputs[0], { target: { value: '1000' } })
+
+    expect(screen.getByTestId('spending-breakdown-error')).toBeInTheDocument()
+    expect(screen.getByTestId('spending-pie')).toBeInTheDocument()
+
+    fireEvent.change(monthlyInputs[0], { target: { value: '5000' } })
+    expect(screen.queryByTestId('spending-breakdown-error')).not.toBeInTheDocument()
+    expect(screen.getByTestId('spending-breakdown-sum')).toHaveTextContent(
+      /\$5,000\s*\/\s*\$5,000\s*\/mo/,
+    )
+
+    const saved = JSON.parse(localStorage.getItem('freedom_cost_baseline') || '{}')
+    expect(saved.spendingBreakdown).toHaveLength(1)
+    expect(saved.spendingBreakdown[0].label).toBe('Housing')
+    expect(saved.spendingBreakdown[0].monthly).toBe(5000)
+  })
+
   test('renders honesty layer return band range and permanent/temporary tags', () => {
     render(<App />)
 

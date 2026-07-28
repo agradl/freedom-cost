@@ -1,3 +1,9 @@
+export type SpendingCategory = {
+  id: string
+  label: string
+  monthly: number
+}
+
 export type Inputs = {
   assets: number
   realReturn: number
@@ -8,6 +14,7 @@ export type Inputs = {
   ssAge: number
   ssMonthly: number
   targetRemainingAssets: number
+  spendingBreakdown?: SpendingCategory[]
 }
 
 export type Overlay = {

@@ -36,7 +36,7 @@ Keep the knobs few. Defaults should load *your* real situation so the tool opens
 - Starting assets
 - Expected real return (default 4%)
 - After-tax income by year — take-home / investable income; enter as many near-term years as you care about; the **latest entered year becomes the default for all years beyond**
-- Spending — a single constant rate for now (does not vary by year)
+- Spending — a single constant rate for now (does not vary by year); optional monthly category breakdown under that field for reference only (must sum to annual ÷ 12; does not affect timeline math)
 - Current age (default 41) and death age (default 95)
 - Social Security claim age (default 65) and monthly benefit (default $4,152) — retirement-side income only
 - Target remaining assets at death (default $0) — the only residual “floor”; the retirement nest egg itself is computed, not typed in

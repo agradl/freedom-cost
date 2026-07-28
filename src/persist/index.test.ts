@@ -111,4 +111,46 @@ describe('Persistence module', () => {
       ...lifeDefaults,
     })
   })
+
+  test('save/load round-trips spendingBreakdown', () => {
+    const withBreakdown: Inputs = {
+      assets: 500_000,
+      realReturn: 0.04,
+      incomeByYear: [100_000],
+      spendingAnnual: 60_000,
+      ...lifeDefaults,
+      spendingBreakdown: [
+        { id: 'a', label: 'Housing', monthly: 3000 },
+        { id: 'b', label: 'Food', monthly: 2000 },
+      ],
+    }
+    saveBaseline(withBreakdown)
+    expect(loadBaseline()).toEqual(withBreakdown)
+  })
+
+  test('parseBaselineJSON keeps valid spendingBreakdown and drops invalid', () => {
+    const valid = {
+      assets: 600_000,
+      realReturn: 0.045,
+      incomeByYear: [90_000],
+      spendingAnnual: 42_000,
+      spendingBreakdown: [{ id: 'x', label: 'Rent', monthly: 2000 }],
+    }
+    expect(parseBaselineJSON(JSON.stringify(valid)).spendingBreakdown).toEqual(
+      valid.spendingBreakdown,
+    )
+
+    const invalid = {
+      ...valid,
+      spendingBreakdown: [{ label: 'Rent', monthly: 2000 }],
+    }
+    expect(
+      parseBaselineJSON(JSON.stringify(invalid)).spendingBreakdown,
+    ).toBeUndefined()
+
+    const empty = { ...valid, spendingBreakdown: [] }
+    expect(
+      parseBaselineJSON(JSON.stringify(empty)).spendingBreakdown,
+    ).toBeUndefined()
+  })
 })

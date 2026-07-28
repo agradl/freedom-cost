@@ -1,4 +1,4 @@
-import type { Inputs } from '../engine/types'
+import type { Inputs, SpendingCategory } from '../engine/types'
 
 export const STORAGE_KEY = 'freedom_cost_baseline'
 
@@ -28,6 +28,25 @@ function isFiniteNumber(value: unknown): value is number {
   return typeof value === 'number' && !Number.isNaN(value)
 }
 
+function isSpendingCategory(value: unknown): value is SpendingCategory {
+  if (typeof value !== 'object' || value === null) return false
+  const row = value as Record<string, unknown>
+  return (
+    typeof row.id === 'string' &&
+    typeof row.label === 'string' &&
+    isFiniteNumber(row.monthly) &&
+    row.monthly >= 0
+  )
+}
+
+function parseSpendingBreakdown(
+  value: unknown,
+): SpendingCategory[] | undefined {
+  if (!Array.isArray(value)) return undefined
+  if (!value.every(isSpendingCategory)) return undefined
+  return value.length > 0 ? value : undefined
+}
+
 function isLegacyCore(data: Record<string, unknown>): boolean {
   return (
     isFiniteNumber(data.assets) &&
@@ -40,6 +59,7 @@ function isLegacyCore(data: Record<string, unknown>): boolean {
 }
 
 function mergeWithDefaults(data: Record<string, unknown>): Inputs {
+  const spendingBreakdown = parseSpendingBreakdown(data.spendingBreakdown)
   return {
     assets: data.assets as number,
     realReturn: data.realReturn as number,
@@ -58,6 +78,7 @@ function mergeWithDefaults(data: Record<string, unknown>): Inputs {
     targetRemainingAssets: isFiniteNumber(data.targetRemainingAssets)
       ? data.targetRemainingAssets
       : DEFAULT_INPUTS.targetRemainingAssets,
+    ...(spendingBreakdown ? { spendingBreakdown } : {}),
   }
 }
 

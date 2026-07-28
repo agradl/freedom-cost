@@ -1,10 +1,11 @@
 import { useState, useRef, type ChangeEvent } from 'react'
-import type { Inputs } from '../engine/types'
+import type { Inputs, SpendingCategory } from '../engine/types'
 import {
   exportBaselineJSON,
   parseBaselineJSON,
   DEFAULT_INPUTS,
 } from '../persist'
+import { SpendingBreakdown } from './SpendingBreakdown'
 
 interface BaselineFormProps {
   inputs: Inputs
@@ -30,11 +31,21 @@ function parseIncomeString(raw: string): number[] {
 
 export function BaselineForm({ inputs, onChange, onReset }: BaselineFormProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [breakdownOpen, setBreakdownOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [incomeInput, setIncomeInput] = useState<string>(
     formatIncomeArray(inputs.incomeByYear),
   )
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleBreakdownChange = (categories: SpendingCategory[] | undefined) => {
+    if (categories === undefined) {
+      const { spendingBreakdown: _removed, ...rest } = inputs
+      onChange(rest)
+      return
+    }
+    onChange({ ...inputs, spendingBreakdown: categories })
+  }
 
   const handleAssetsChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = Number.parseFloat(e.target.value) || 0
@@ -202,6 +213,16 @@ export function BaselineForm({ inputs, onChange, onReset }: BaselineFormProps) {
                 value={inputs.spendingAnnual}
                 onChange={handleSpendingChange}
                 data-testid="spending-input"
+              />
+            </div>
+
+            <div className="form-group full-width">
+              <SpendingBreakdown
+                spendingAnnual={inputs.spendingAnnual}
+                categories={inputs.spendingBreakdown ?? []}
+                onChange={handleBreakdownChange}
+                isOpen={breakdownOpen}
+                onToggle={() => setBreakdownOpen((open) => !open)}
               />
             </div>
 
