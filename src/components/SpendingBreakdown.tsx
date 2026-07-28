@@ -1,5 +1,4 @@
 import type { SpendingCategory } from '../engine/types'
-import { SpendingPie } from './SpendingPie'
 
 type SpendingBreakdownProps = {
   spendingAnnual: number
@@ -43,7 +42,6 @@ export function SpendingBreakdown({
   const targetMonthly = spendingAnnual / 12
   const sum = categories.reduce((s, c) => s + c.monthly, 0)
   const isValid = spendingBreakdownIsValid(spendingAnnual, categories)
-  const pieSlices = categories.filter((c) => c.monthly > 0)
 
   const updateCategories = (next: SpendingCategory[]) => {
     onChange(next.length > 0 ? next : undefined)
@@ -97,77 +95,73 @@ export function SpendingBreakdown({
             spending ÷ 12. Does not change the timeline math.
           </p>
 
-          <div className="spending-breakdown-layout">
-            <div className="spending-breakdown-rows">
-              {categories.map((cat) => (
-                <div
-                  key={cat.id}
-                  className="spending-category-row"
-                  data-testid="spending-category-row"
-                >
-                  <input
-                    type="text"
-                    className="spending-category-label"
-                    placeholder="Category"
-                    value={cat.label}
-                    onChange={(e) => handleLabelChange(cat.id, e.target.value)}
-                    aria-label="Category label"
-                    data-testid="spending-category-label"
-                  />
-                  <input
-                    type="number"
-                    className="spending-category-monthly"
-                    min="0"
-                    step="50"
-                    placeholder="0"
-                    value={cat.monthly === 0 ? '' : cat.monthly}
-                    onChange={(e) =>
-                      handleMonthlyChange(cat.id, e.target.value)
-                    }
-                    aria-label="Monthly amount"
-                    data-testid="spending-category-monthly"
-                  />
-                  <button
-                    type="button"
-                    className="spending-category-remove"
-                    onClick={() => handleRemove(cat.id)}
-                    aria-label="Remove category"
-                    data-testid="spending-category-remove"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-
-              <button
-                type="button"
-                className="secondary-btn"
-                onClick={handleAdd}
-                data-testid="add-spending-category-btn"
+          <div className="spending-breakdown-rows">
+            {categories.map((cat) => (
+              <div
+                key={cat.id}
+                className="spending-category-row"
+                data-testid="spending-category-row"
               >
-                Add category
-              </button>
-
-              {categories.length > 0 && (
-                <div
-                  className="spending-breakdown-sum"
-                  data-testid="spending-breakdown-sum"
+                <input
+                  type="text"
+                  className="spending-category-label"
+                  placeholder="Category"
+                  value={cat.label}
+                  onChange={(e) => handleLabelChange(cat.id, e.target.value)}
+                  aria-label="Category label"
+                  data-testid="spending-category-label"
+                />
+                <input
+                  type="number"
+                  className="spending-category-monthly"
+                  min="0"
+                  step="50"
+                  placeholder="0"
+                  value={cat.monthly === 0 ? '' : cat.monthly}
+                  onChange={(e) =>
+                    handleMonthlyChange(cat.id, e.target.value)
+                  }
+                  aria-label="Monthly amount"
+                  data-testid="spending-category-monthly"
+                />
+                <button
+                  type="button"
+                  className="spending-category-remove"
+                  onClick={() => handleRemove(cat.id)}
+                  aria-label="Remove category"
+                  data-testid="spending-category-remove"
                 >
-                  {formatMoney(sum)} / {formatMoney(targetMonthly)} /mo
-                </div>
-              )}
+                  ×
+                </button>
+              </div>
+            ))}
 
-              {categories.length > 0 && !isValid && (
-                <div
-                  className="form-error"
-                  data-testid="spending-breakdown-error"
-                >
-                  Categories must total {formatMoney(targetMonthly)}/mo
-                </div>
-              )}
-            </div>
+            <button
+              type="button"
+              className="secondary-btn"
+              onClick={handleAdd}
+              data-testid="add-spending-category-btn"
+            >
+              Add category
+            </button>
 
-            {pieSlices.length > 0 && <SpendingPie slices={pieSlices} />}
+            {categories.length > 0 && (
+              <div
+                className="spending-breakdown-sum"
+                data-testid="spending-breakdown-sum"
+              >
+                {formatMoney(sum)} / {formatMoney(targetMonthly)} /mo
+              </div>
+            )}
+
+            {categories.length > 0 && !isValid && (
+              <div
+                className="form-error"
+                data-testid="spending-breakdown-error"
+              >
+                Categories must total {formatMoney(targetMonthly)}/mo
+              </div>
+            )}
           </div>
         </div>
       )}

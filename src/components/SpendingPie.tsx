@@ -1,13 +1,4 @@
-type Slice = {
-  label: string
-  monthly: number
-}
-
-type SpendingPieProps = {
-  slices: Slice[]
-}
-
-const COLORS = [
+export const SPENDING_PIE_COLORS = [
   '#2563eb',
   '#0d9488',
   '#ca8a04',
@@ -17,6 +8,15 @@ const COLORS = [
   '#059669',
   '#ea580c',
 ]
+
+type Slice = {
+  label: string
+  monthly: number
+}
+
+type SpendingPieProps = {
+  slices: Slice[]
+}
 
 function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
   const rad = ((angleDeg - 90) * Math.PI) / 180
@@ -69,7 +69,7 @@ export function SpendingPie({ slices }: SpendingPieProps) {
           cx={cx}
           cy={cy}
           r={r}
-          fill={COLORS[i % COLORS.length]}
+          fill={SPENDING_PIE_COLORS[i % SPENDING_PIE_COLORS.length]}
         />
       )
     }
@@ -78,7 +78,7 @@ export function SpendingPie({ slices }: SpendingPieProps) {
       <path
         key={slice.label + i}
         d={describeArc(cx, cy, r, startAngle, endAngle)}
-        fill={COLORS[i % COLORS.length]}
+        fill={SPENDING_PIE_COLORS[i % SPENDING_PIE_COLORS.length]}
       >
         <title>
           {slice.label || 'Untitled'}: ${slice.monthly.toLocaleString()}/mo

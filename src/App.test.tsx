@@ -139,6 +139,7 @@ describe('Timeline Chart & App Integration', () => {
     fireEvent.change(monthlyInputs[0], { target: { value: '1000' } })
 
     expect(screen.getByTestId('spending-breakdown-error')).toBeInTheDocument()
+    expect(screen.getByTestId('spending-breakdown-card')).toBeInTheDocument()
     expect(screen.getByTestId('spending-pie')).toBeInTheDocument()
 
     fireEvent.change(monthlyInputs[0], { target: { value: '5000' } })
@@ -146,6 +147,7 @@ describe('Timeline Chart & App Integration', () => {
     expect(screen.getByTestId('spending-breakdown-sum')).toHaveTextContent(
       /\$5,000\s*\/\s*\$5,000\s*\/mo/,
     )
+    expect(screen.getByTestId('spending-breakdown-legend')).toBeInTheDocument()
 
     const saved = JSON.parse(localStorage.getItem('freedom_cost_baseline') || '{}')
     expect(saved.spendingBreakdown).toHaveLength(1)

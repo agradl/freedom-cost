@@ -290,6 +290,56 @@ body {
   background: #f8fafc;
 }
 
+.spending-breakdown-card {
+  min-height: 100%;
+  grid-column: span 2;
+}
+
+.spending-breakdown-card-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.spending-breakdown-legend {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #334155;
+  min-width: 0;
+  flex: 1;
+}
+
+.spending-breakdown-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.legend-swatch {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 0.125rem;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.legend-value {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
 .lever-title h3 {
   font-size: 1rem;
   font-weight: 700;
@@ -588,19 +638,10 @@ body {
   border-radius: 0.5rem;
 }
 
-.spending-breakdown-layout {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: flex-start;
-}
-
 .spending-breakdown-rows {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  flex: 1;
-  min-width: 200px;
 }
 
 .spending-category-row {

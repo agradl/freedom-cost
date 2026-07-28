@@ -6,6 +6,7 @@ import { TimelineChart } from './components/TimelineChart'
 import { Levers } from './components/Levers'
 import { AsymmetrySummary } from './components/AsymmetrySummary'
 import { BaselineForm } from './components/BaselineForm'
+import { SpendingBreakdownCard } from './components/SpendingBreakdownCard'
 import { formatRetireYear } from './formatRetireYear'
 import './index.css'
 
@@ -108,6 +109,7 @@ export function App() {
               {((overlayResult.band?.optimistic.realReturn ?? 0.06) * 100).toFixed(0)}%)
             </span>
           </div>
+          <SpendingBreakdownCard categories={inputs.spendingBreakdown ?? []} />
         </div>
 
         <AsymmetrySummary
